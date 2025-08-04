@@ -137,6 +137,7 @@ int main() {
 - O(9!) for the visited set.
 - O(H) for recursion stack in the worst-case path depth H (up to 9 levels deep).
 
+---
 
 ## Use Cases
 - Useful for understanding how uninformed search algorithms work.
