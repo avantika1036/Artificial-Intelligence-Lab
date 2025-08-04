@@ -3,7 +3,7 @@
 > **Name**: Avantika Pandey  
 > **Roll No**: UE233025  
 > **Group**: 2  
-> **Section**: CSE Section-1  
+> **Class**: CSE Section-1  
 
 ---
 
