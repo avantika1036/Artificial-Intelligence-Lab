@@ -1,19 +1,16 @@
 # Magic Square Generator
 
 ## Problem Statement
-Generate an *n x n* magic square—a square arrangement of numbers where the sums of numbers in each row, column, and diagonal are all equal. The program supports all valid sizes of *n* (n ≥ 3, n ≠ 2).
+Generate an *n x n* magic square—a square arrangement of numbers where the sums of numbers in each row, column, and diagonal are all equal. The program supports all valid sizes of *n* `(n ≥ 3, n ≠ 2)`.
 
 ## Approach
 The solution uses different algorithms based on the parity of *n*:
 
-- **Odd n:** Uses the Siamese method (de la Loubere’s method), placing numbers sequentially with specific upward-right movement and wrap-around.
+- **Odd n:** Uses the `Siamese method (de la Loubere’s method)`, placing numbers sequentially with specific upward-right movement and wrap-around.
 - **Doubly Even n (n divisible by 4):** Fills the square sequentially, then inverts certain positions based on a fixed pattern.
 - **Singly Even n (even but not divisible by 4):** Divides the square into four quadrants filled with smaller odd-sized magic squares, then performs swaps in specific columns to fix the magic property.
 
-Each method ensures the magic constant $$
-M = n \times \frac{n^2 + 1}{2}
-$$
-is maintained.
+Each method ensures the magic constant  `M = n * n² + 1` is maintained.
 
 ## Implementation Details
 - The program reads input *n*.
