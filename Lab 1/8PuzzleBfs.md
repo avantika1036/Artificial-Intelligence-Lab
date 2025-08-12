@@ -1,147 +1,290 @@
-# 8-Puzzle Solver using BFS
+# Tic-Tac-Toe with AI Opponent
 
 ## Problem Statement
 
-Solve the classic **8-puzzle problem** using **Breadth First Search (BFS)**.  
-The puzzle is represented as a 3x3 grid containing numbers `1-8` and a blank space (`0`).  
-The objective is to transform a given start state into the goal state by sliding the tiles.
+Implement a **Tic-Tac-Toe** game where a human plays against an AI.  
+The AI uses a heuristic-based strategy to decide moves and can play as either **X** (first player) or **O** (second player).  
+The board is a 3x3 grid with positions numbered 1 to 9.
 
 ---
 
 ## Approach
 
-- Use a **queue** to explore the state space in a level-wise manner (BFS).
-- At every state:
-  - Find the position of the empty tile.
-  - Generate all valid states by moving the tile (up, down, left, right).
-  - Enqueue each new unvisited state.
-- Stop when the goal state is found.
+- Represent the board as a vector of integers (size 10, index 1-9 used).
+- Each cell holds:
+  - `2` for empty
+  - `3` for X
+  - `5` for O  
+  (Using prime numbers allows quick win detection via multiplication.)
+- Track turns and alternate moves between human and AI.
+- AI decision logic:
+  - Attempt to win if possible.
+  - Block opponent’s immediate winning moves.
+  - Take center or corners as strategic moves.
+  - Follow a heuristic plan depending on the turn number.
+- The game ends when a player wins or all squares are filled (draw).
 
 ---
 
 ## Implementation Details
 
-- Each state is a `vector<vector<int>>` (3x3 matrix).
-- `std::queue` stores the current state frontier.
-- `std::set` is used to avoid revisiting states.
-- `findEmptyBox()` locates the position of the empty tile (0).
-- The directions are defined as `(dx, dy)` pairs for moving the blank tile.
+- `printBoard()` displays the current board state.
+- `Go(int n)` places a move on the board if the cell is empty.
+- `Posswin(int player)` checks if `player` can win on the next move.
+- `checkWinner()` evaluates if there is a winner by checking all winning lines.
+- `Make2()` helps the AI select strategic positions such as center or edges.
+- `humanMove()` prompts and validates user input.
+- `aiMove()` applies the AI heuristic logic to select moves.
+- The main loop alternates turns, printing the board and checking for a winner after each move.
 
 ---
 
-## Code
+## Code (C++)
 
 ```cpp
-# include<bits/stdc++.h>
+#include <iostream>
+#include <vector>
 using namespace std;
 
-void print_board(vector<vector<int>>& board) 
+vector<int> board(10, 2); 
+int turn = 1;
+bool aiIsX;
+
+void printBoard() 
 {
-    for(int i = 0; i < 3; i++)
+    cout << "\n";
+    for (int i = 1; i <= 9; ++i) 
     {
-        for(int j = 0; j < 3; j++)
-        {
-            cout << board[i][j] << " ";
-        }
-        cout << endl;
+        char mark = (board[i] == 3) ? 'X' : (board[i] == 5) ? 'O' : ' ';
+        cout << " " << mark << " ";
+        if (i % 3 == 0) cout << "\n";
+        else cout << "|";
+    }
+    cout << "\n";
+}
+
+void Go(int n) 
+{
+    if (board[n] == 2) 
+    {
+        board[n] = (turn % 2 == 1) ? 3 : 5;
+        turn++;
     }
 }
 
-bool isGoal(vector<vector<int>>& puzzle, vector<vector<int>>& goal)
+int Make2() 
 {
-    for(int i = 0; i < 3; i++)
+    if (board[5] == 2) return 5;
+    for (int i : {2, 4, 6, 8}) 
     {
-        for(int j = 0; j < 3; j++)
+        if (board[i] == 2) return i;
+    }
+    return 0;
+}
+
+int Posswin(int player) 
+{
+    vector<vector<int>> lines = 
+    {
+        {1,2,3}, {4,5,6}, {7,8,9},
+        {1,4,7}, {2,5,8}, {3,6,9},
+        {1,5,9}, {3,5,7}
+    };
+
+    int target = player * player * 2;
+
+    for (auto &line : lines) 
+    {
+        int a = line[0], b = line[1], c = line[2];
+        int prod = board[a] * board[b] * board[c];
+        if (prod == target) 
         {
-            if(puzzle[i][j] != goal[i][j]) return false;
+            if (board[a] == 2) return a;
+            if (board[b] == 2) return b;
+            if (board[c] == 2) return c;
+        }
+    }
+    return 0;
+}
+
+int checkWinner() 
+{
+    vector<vector<int>> lines = 
+    {
+        {1,2,3}, {4,5,6}, {7,8,9},
+        {1,4,7}, {2,5,8}, {3,6,9},
+        {1,5,9}, {3,5,7}
+    };
+
+    for (auto &line : lines) 
+    {
+        int prod = board[line[0]] * board[line[1]] * board[line[2]];
+        if (prod == 27) return 3;   
+        if (prod == 125) return 5; 
+    }
+
+    return 0; 
+}
+
+void humanMove() 
+{
+    int move;
+    while (true) 
+    {
+        cout << "Your move (1-9): ";
+        cin >> move;
+        if (move >= 1 && move <= 9 && board[move] == 2) 
+        {
+            Go(move);
+            break;
+        } 
+        else 
+        {
+            cout << "Invalid move. Try again.\n";
+        }
+    }
+}
+
+void aiMove() 
+{
+    int move = 0;
+    bool aiTurnOdd = ((turn % 2 == 1) == aiIsX);
+
+    if (aiTurnOdd) 
+    {
+        switch (turn) 
+        {
+            case 1:
+                move = 1;
+                break;
+            case 3:
+                move = (board[9] == 2) ? 9 : 3;
+                break;
+            case 5:
+                if ((move = Posswin(3))) break;
+                if ((move = Posswin(5))) break;
+                move = (board[7] == 2) ? 7 : 3;
+                break;
+            case 7:
+            case 9:
+                if ((move = Posswin(3))) break;
+                if ((move = Posswin(5))) break;
+                for (int i = 1; i <= 9; i++) 
+                {
+                    if (board[i] == 2) 
+                    { 
+                        move = i; 
+                        break; 
+                    }
+                }
+                break;
+        }
+    }
+    else 
+    {
+        switch (turn) 
+        {
+            case 2:
+                move = (board[5] == 2) ? 5 : 1;
+                break;
+            case 4:
+                if ((move = Posswin(3))) break;
+                move = Make2();
+                break;
+            case 6:
+                if ((move = Posswin(5))) break;
+                if ((move = Posswin(3))) break;
+                move = Make2();
+                break;
+            case 8:
+                if ((move = Posswin(5))) break;
+                if ((move = Posswin(3))) break;
+                for (int i = 1; i <= 9; i++) 
+                {
+                    if (board[i] == 2) 
+                    { 
+                        move = i; 
+                        break; 
+                    }
+                }
+                break;
         }
     }
 
-    return true;
-}
-
-void findEmptyBox(vector<vector<int>>& puzzle, int& x, int& y)
-{
-    for(int i = 0; i < 3; i++)
+    if (!move) 
     {
-        for(int j = 0; j < 3; j++)
+        if ((move = Posswin(aiIsX ? 3 : 5))) {}
+        else if ((move = Posswin(aiIsX ? 5 : 3))) {}
+        else 
         {
-            if(puzzle[i][j] == 0)
+            for (int i = 1; i <= 9; i++) 
             {
-                x = i;
-                y = j;
+                if (board[i] == 2) 
+                { 
+                    move = i; 
+                    break; 
+                }
             }
         }
     }
+
+    cout << "AI chooses square " << move << "\n";
+    Go(move);
 }
 
-bool bfs(vector<vector<int>>& puzzle, vector<vector<int>>& goal)
+int main() 
 {
-    queue<vector<vector<int>>> q;
-    set<vector<vector<int>>> visited;
-    q.push(puzzle);
+    cout << "Welcome to Tic-Tac-Toe!\n";
+    char choice;
+    cout << "Should AI play as X and start first? (y/n): ";
+    cin >> choice;
+    aiIsX = (choice == 'y' || choice == 'Y');
 
-    while(!q.empty())
+    printBoard();
+
+    while (turn <= 9) 
     {
-        vector<vector<int>> curr_puzzle = q.front();
-        q.pop();
-
-        if(isGoal(curr_puzzle, goal)) return true;
-        if(visited.count(curr_puzzle)) continue;
-        visited.insert(curr_puzzle);
-
-        int x = -1, y = -1;
-        findEmptyBox(curr_puzzle, x, y);
-
-        vector<pair<int, int>> dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-
-        for(auto dir: dirs)
+        if ((turn % 2 == 1) == aiIsX) 
         {
-            int nx = x + dir.first;
-            int ny = y + dir.second;
-            if(nx >= 0 && ny >= 0 && nx < 3 && ny < 3)
-            {
-                vector<vector<int>> new_puzzle = curr_puzzle;
-                swap(new_puzzle[nx][ny], new_puzzle[x][y]);
-                if(!visited.count(new_puzzle)) q.push(new_puzzle);
-            }
+            aiMove();
+        } 
+        else 
+        {
+            humanMove();
         }
-    } 
-    
-    return false;
-}
 
-int main() {
-    vector<vector<int>> puzzle = {{1, 2, 3}, {4, 5, 6}, {0, 7, 8}};
-    vector<vector<int>> goal = {{1,2, 3}, {4, 5, 6}, {7, 8, 0}};
-    cout << "Start state:" << endl;
-    print_board(puzzle);
+        printBoard();
 
-    if (bfs(puzzle, goal)) cout << "Solution found!" << endl;
-    else cout << "No solution found!" << endl;
+        int winner = checkWinner();
+        if (winner == 3) 
+        { 
+            cout << ((aiIsX) ? "AI wins!\n" : "Human wins!\n");
+            return 0;
+        }
+        else if (winner == 5) 
+        { 
+            cout << ((!aiIsX) ? "AI wins!\n" : "Human wins!\n");
+            return 0;
+        }
 
+    }
+
+    cout << "It's a draw!\n";
     return 0;
 }
 ```
-
 ---
 
 ## Time and Space Complexity
 
-### Time Complexity:
-- **Worst-case:** O(9!)  
-  - Each state is unique (up to 9! total).
-  - BFS explores each state only once.
-  - It ensures shortest path but visits many states.
-
-### Space Complexity:
-- O(9!) for the visited set and queue.
-  - Each state is stored in memory.
+- **Time Complexity:** O(1) per move — constant checks of 8 winning lines and up to 9 board positions.
+- **Space Complexity:** O(1) — fixed-size board and auxiliary variables only.
 
 ---
 
 ## Use Cases
-- Finds the shortest path to the goal (unlike DFS).
-- Good for solving problems with minimal steps required.
-- Demonstrates uninformed search algorithm in AI.
 
+- Play Tic-Tac-Toe against a simple AI with basic strategic thinking.
+- Demonstrates prime number technique for efficient win detection.
+- Serves as a base for learning game AI heuristics.
+- Can be extended to more advanced AI algorithms (minimax, alpha-beta pruning).
