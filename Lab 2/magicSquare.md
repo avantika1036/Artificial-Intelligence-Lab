@@ -3,6 +3,7 @@
 ## Problem Statement
 Generate an *n x n* magic square—a square arrangement of numbers where the sums of numbers in each row, column, and diagonal are all equal. The program supports all valid sizes of *n* `(n ≥ 3, n ≠ 2)`.
 
+---
 ## Approach
 The solution uses different algorithms based on the parity of *n*:
 
@@ -12,6 +13,7 @@ The solution uses different algorithms based on the parity of *n*:
 
 Each method ensures the magic constant  `M = n * n² + 1` is maintained.
 
+---
 ## Implementation Details
 - The program reads input *n*.
 - Validates input (n ≥ 3 and n ≠ 2).
@@ -148,6 +150,7 @@ int main() {
 
 **Space Complexity:** O(n²) — The square matrix stores n² integers.
 
+---
 ## Use Cases
 - Mathematical recreation and education.
 - Generating magic squares for puzzles and games.
