@@ -288,3 +288,13 @@ int main()
 - Demonstrates prime number technique for efficient win detection.
 - Serves as a base for learning game AI heuristics.
 - Can be extended to more advanced AI algorithms (minimax, alpha-beta pruning).
+
+---
+
+## Limitations
+
+- Uses simple heuristics, not guaranteed optimal.
+- Limited lookahead, no deep strategy.
+- Fixed move rules can be predictable.
+- No learning or adaptation.
+- Detects draws only when board is full

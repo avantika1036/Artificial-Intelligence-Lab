@@ -252,8 +252,17 @@ Uses a fixed-size vector and arrays; no dynamic memory grows with input size.
 ---
 
 ## Use Cases
-
 - Play Tic-Tac-Toe against an AI that uses mathematical properties (magic squares) to make optimal moves.
 - Demonstrate how magic squares can simplify game logic and win detection.
 - Educational example of integrating mathematical concepts into game AI.
 - Foundation for expanding to more complex game AI or incorporating alternative board evaluation techniques.
+
+---
+
+## Limitations
+
+- Better move detection but still one-move lookahead.
+- No full game-tree search or advanced planning.
+- Only detects draws at game end.
+- Fixed symbol mapping limits flexibility.
+- Magic square method only works for 3x3 Tic-Tac-Toe.
