@@ -10,7 +10,10 @@ The solution uses different algorithms based on the parity of *n*:
 - **Doubly Even n (n divisible by 4):** Fills the square sequentially, then inverts certain positions based on a fixed pattern.
 - **Singly Even n (even but not divisible by 4):** Divides the square into four quadrants filled with smaller odd-sized magic squares, then performs swaps in specific columns to fix the magic property.
 
-Each method ensures the magic constant \( M = n \times \frac{n^2 + 1}{2} \) is maintained.
+Each method ensures the magic constant $$
+M = n \times \frac{n^2 + 1}{2}
+$$
+is maintained.
 
 ## Implementation Details
 - The program reads input *n*.
