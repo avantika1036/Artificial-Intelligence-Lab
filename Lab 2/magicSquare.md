@@ -153,9 +153,3 @@ int main() {
 - Generating magic squares for puzzles and games.
 - Demonstrating combinatorial and parity-based algorithms.
 - Teaching different algorithmic techniques for special cases.
-
-## Limitations
-- Input restricted to n ≥ 3 and n ≠ 2 (magic squares of order 2 do not exist).
-- Singly even method complexity grows with n; swaps are fixed but can be non-trivial to understand.
-- Does not handle invalid or non-integer inputs.
-- Output formatting is basic (console only).
