@@ -180,4 +180,3 @@ int main()
 - **Performance**: Can still explore many unnecessary states for complex puzzles.
 - **Heuristic Weakness**: Misplaced tiles heuristic doesn't consider distance, so it's less informed than Manhattan distance.
 
----

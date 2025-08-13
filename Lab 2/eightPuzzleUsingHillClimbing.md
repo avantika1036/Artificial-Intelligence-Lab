@@ -179,4 +179,3 @@ int main()
 - **No Backtracking**: Once stuck, it does not explore alternative paths.
 - **Not Optimal**: May find a solution that is not the shortest.
 
----
