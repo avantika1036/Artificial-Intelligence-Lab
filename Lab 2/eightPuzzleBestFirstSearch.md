@@ -20,6 +20,24 @@ It starts from an initial puzzle configuration and tries to reach the goal confi
    - Uses a `visited` set to avoid revisiting the same state.
 
 ---
+
+## Implementation Details
+- **`print_board`**: Displays the current puzzle configuration in grid format.
+- **`isGoal`**: Compares the current puzzle state with the goal state.
+- **`findEmptyBox`**: Finds the position of the empty tile (`0`) in the puzzle.
+- **`misplaced_tiles`**: Calculates the number of tiles out of place, ignoring the empty tile.
+- **`boardToString`**: Converts the 2D board into a string for use in the visited set.
+- **`greedyBestFirst`**:
+  - Uses a **priority queue** to store states ordered by heuristic value.
+  - Pops the best state, checks for goal, and generates valid moves.
+  - Skips already visited states to prevent infinite loops.
+- **`main`**:
+  - Defines the initial and goal states.
+  - Prints the starting state.
+  - Calls `greedyBestFirst` to attempt solving.
+
+---
+
 ## Code (C++)
 
 ```cpp
