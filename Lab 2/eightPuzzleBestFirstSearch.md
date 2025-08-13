@@ -1,29 +1,25 @@
-# 8-Puzzle Solver Using Greedy Best-First Search
+# 8-Puzzle Solver using Greedy Best-First Search
 
 ## Problem Statement
-Implement a solver for the classic 8-puzzle game using Greedy Best-First Search algorithm with the Manhattan distance heuristic. The program finds a sequence of moves from a given start state to the goal state.
+The program solves the 8-puzzle problem using the **Greedy Best-First Search (GBFS)** algorithm with the **misplaced tiles heuristic**.  
+It starts from an initial puzzle configuration and tries to reach the goal configuration by prioritizing states with fewer misplaced tiles.
 
 ---
+
 ## Approach
-- Represent the puzzle as a 3x3 grid with `0` indicating the empty slot.
-- Use Greedy Best-First Search where states are prioritized based on the Manhattan distance heuristic.
-- Manhattan distance calculates how far each tile is from its goal position.
-- Keep track of visited states to avoid cycles.
-- Generate neighboring states by sliding the empty slot up/down/left/right.
-- Continue until the goal state is reached or no solution exists.
+1. **Representation**:  
+   - Puzzle is stored as a 3×3 matrix with `0` representing the empty space.
+2. **Heuristic Function**:  
+   - Counts the number of tiles that are not in their goal position (`misplaced tiles`).
+3. **Greedy Best-First Search**:  
+   - Maintains a priority queue sorted by heuristic value.
+   - Expands the state with the smallest heuristic score.
+4. **State Expansion**:  
+   - Moves the empty space up, down, left, or right to generate new states.
+5. **Cycle Prevention**:  
+   - Uses a `visited` set to avoid revisiting the same state.
 
 ---
-## Implementation Details
-- `print_board`: Prints the current board state.
-- `isGoal`: Checks if the current state matches the goal.
-- `findEmptyBox`: Finds coordinates of the empty slot (`0`).
-- `manhattan`: Calculates the heuristic by summing Manhattan distances for all tiles.
-- `boardToString`: Converts the board to a string for efficient visited state tracking.
-- `greedyBestFirst`: Core algorithm that uses a priority queue ordered by heuristic value.
-- Main function initializes puzzle and goal states and starts the search.
-
----
-
 ## Code (C++)
 
 ```cpp
@@ -53,29 +49,18 @@ pair<int,int> findEmptyBox(const vector<vector<int>>& puzzle)
     return {-1,-1};
 }
 
-int manhattan(const vector<vector<int>>& puzzle, const vector<vector<int>>& goal) 
+int misplaced_tiles(const vector<vector<int>>& puzzle, const vector<vector<int>>& goal) 
 {
-    int dist = 0;
-    for(int i=0; i<3; i++)
+    int count = 0;
+    for(int i=0; i<3; i++) 
     {
-        for(int j=0; j<3; j++)
+        for(int j=0; j<3; j++) 
         {
-            int val = puzzle[i][j];
-            if(val != 0)
-            {
-                for(int x=0; x<3; x++)
-                {
-                    for(int y=0; y<3; y++){
-                        if(goal[x][y] == val)
-                        {
-                            dist += abs(i - x) + abs(j - y);
-                        }
-                    }
-                }
-            }
+            if (puzzle[i][j] != 0 && puzzle[i][j] != goal[i][j])
+                count++;
         }
     }
-    return dist;
+    return count;
 }
 
 string boardToString(const vector<vector<int>>& board) 
@@ -86,11 +71,11 @@ string boardToString(const vector<vector<int>>& board)
     return s;
 }
 
-bool greedyBestFirst(vector<vector<int>> start, vector<vector<int>> goal)
+bool greedyBestFirst(vector<vector<int>> start, vector<vector<int>> goal) 
 {
     auto cmp = [&](const vector<vector<int>>& a, const vector<vector<int>>& b) 
     {
-        return manhattan(a, goal) > manhattan(b, goal);
+        return misplaced_tiles(a, goal) > misplaced_tiles(b, goal);
     };
 
     priority_queue<vector<vector<int>>, vector<vector<vector<int>>>, decltype(cmp)> pq(cmp);
@@ -137,8 +122,8 @@ bool greedyBestFirst(vector<vector<int>> start, vector<vector<int>> goal)
 
 int main() 
 {
-    vector<vector<int>> puzzle = {{1,2,3},{4,5,6},{0,7,8}};
-    vector<vector<int>> goal = {{1,2,3},{4,5,6},{7,8,0}};
+    vector<vector<int>> puzzle = {{1, 2, 3}, {4, 5, 6}, {0, 7, 8}};
+    vector<vector<int>> goal = {{1, 2, 3}, {4, 5, 6}, {7, 8, 0}};
 
     cout << "Start state:\n";
     print_board(puzzle);
@@ -147,30 +132,34 @@ int main()
 
     return 0;
 }
+
 ```
---- 
+
+---
 
 ## Time Complexity
-- Worst case: exponential in the number of states (`O(b^d)`), where `b` is branching factor and `d` is depth.
-- Greedy heuristic helps reduce exploration but no guarantee of optimality.
+- **Worst case**: \( O(b^d) \)  
+  where:
+  - \( b \) = branching factor (up to 4 for the 8-puzzle)  
+  - \( d \) = depth of the shallowest goal node  
+- GBFS may explore many nodes due to its lack of optimality guarantees.
 
 ## Space Complexity
-- Depends on the number of states stored in the priority queue and visited set.
-- Potentially exponential in worst case.
+- **O(n)** where n is the number of unique states stored in memory (visited set + priority queue).
 
 ---
 
 ## Use Cases
-- Solving sliding puzzles (like 8-puzzle) automatically.
-- Demonstrating heuristic search algorithms.
-- Educational tool for understanding Greedy Best-First Search.
-- AI pathfinding and problem-solving exercises.
+- Educational demonstration of heuristic search.
+- Understanding strengths and weaknesses of GBFS.
+- Introductory AI assignments for search algorithms.
 
---- 
+---
+
 ## Limitations
-- Does not guarantee the shortest solution path (non-optimal).
-- May get stuck or perform poorly if heuristic is misleading.
-- Limited to 8-puzzle (3x3); needs modification for larger puzzles.
-- Memory intensive due to storing states and visited set.
+- **Not Optimal**: May find a suboptimal path.
+- **Not Complete**: May fail to find a solution even when one exists (depends on heuristic).
+- **Performance**: Can still explore many unnecessary states for complex puzzles.
+- **Heuristic Weakness**: Misplaced tiles heuristic doesn't consider distance, so it's less informed than Manhattan distance.
 
-
+---
