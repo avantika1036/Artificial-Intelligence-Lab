@@ -6,6 +6,7 @@ Given two jugs with known capacities and a target amount of water, determine if 
 - Empty a jug.
 - Pour water from one jug to the other until one is empty or the other is full.
 
+---
 ## Approach
 - Use **Breadth-First Search (BFS)** to explore all possible states in order of increasing steps.
 - Represent each state as `(amountInJug1, amountInJug2)`.
@@ -16,6 +17,7 @@ Given two jugs with known capacities and a target amount of water, determine if 
 - Keep track of visited states to avoid repeated processing.
 - BFS ensures the shortest number of steps to reach the target.
 
+---
 ## Implementation Details
 - `waterJugBFS`: Implements BFS using a queue to explore states level-by-level.
 - `visited`: A set to store visited states to prevent revisiting.
@@ -108,15 +110,15 @@ int main() {
 
 ## Space Complexity
 - **O(jug1Cap × jug2Cap)** for visited states and BFS queue.
+---
 
 ## Use Cases
 - Finding the shortest sequence of steps in the water jug problem.
 - AI search algorithm demonstration.
 - Teaching tool for BFS and state-space exploration.
 
+---
 ## Limitations
 - Requires both jug capacities and target to be integers.
 - Not optimized for very large capacities (can consume high memory).
 - BFS may still explore many unnecessary states if target is unreachable.
-
----
