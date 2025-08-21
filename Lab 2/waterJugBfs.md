@@ -1,33 +1,46 @@
-# Water Jug Problem Solver (BFS Approach)
+# 8-Puzzle Solver using Hill Climbing
 
 ## Problem Statement
-Given two jugs with known capacities and a target amount of water, determine if it is possible to measure exactly the target amount using the following operations:
-- Fill a jug completely.
-- Empty a jug.
-- Pour water from one jug to the other until one is empty or the other is full.
+This program solves the 8-puzzle problem using the **Hill Climbing** search algorithm with the **misplaced tiles heuristic**.  
+The goal is to transform the initial configuration into the goal configuration by moving the empty tile (`0`) in legal directions.
 
 ---
+
 ## Approach
-- Use **Breadth-First Search (BFS)** to explore all possible states in order of increasing steps.
-- Represent each state as `(amountInJug1, amountInJug2)`.
-- From each state, generate all possible next states:
-  1. Fill either jug.
-  2. Empty either jug.
-  3. Pour water from one jug to the other.
-- Keep track of visited states to avoid repeated processing.
-- BFS ensures the shortest number of steps to reach the target.
+1. **State Representation**:  
+   - Puzzle is stored as a 3×3 matrix (vector of vectors), with `0` representing the empty tile.
+2. **Heuristic**:  
+   - **Misplaced Tiles** — counts tiles not in their correct position (excluding `0`).
+3. **Algorithm Flow**:  
+   - Start from the initial state.
+   - Generate all valid neighbor states by moving the empty tile.
+   - Choose the neighbor with the smallest heuristic value.
+   - Repeat until:
+     - Goal state is reached, or
+     - No better neighbor exists.
 
 ---
+
 ## Implementation Details
-- `waterJugBFS`: Implements BFS using a queue to explore states level-by-level.
-- `visited`: A set to store visited states to prevent revisiting.
-- `nextStates`: Generated from each state by applying all valid moves.
-- Main function takes jug capacities and target amount, then runs BFS.
+- **`print_board`**: Prints the current puzzle board state.
+- **`isGoal`**: Checks if the current state matches the goal state.
+- **`findEmptyBox`**: Finds coordinates of the empty tile (`0`).
+- **`misplaced_tiles`**: Calculates heuristic (number of misplaced tiles).
+- **`get_neighbors`**: Generates all possible states by moving the empty tile in up to 4 directions.
+- **`hillClimbing`**:
+  - Keeps track of the current state and its heuristic.
+  - Selects the neighbor with the lowest heuristic.
+  - Stops if no improvement is possible.
+- **`main`**:
+  - Defines start and goal states.
+  - Calls `hillClimbing` to solve the puzzle.
 
 ---
-## Code (C++)
+
+## Code
 
 ```cpp
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -101,24 +114,32 @@ int main() {
 
     return 0;
 }
+
 ```
 ---
 
 ## Time Complexity
-- Worst-case: **O(jug1Cap × jug2Cap)** — all possible states explored once.
-- BFS ensures minimal steps to reach the target.
+- **Worst case**: \( O(b \times d) \)  
+  where:
+  - \( b \) = branching factor (≤ 4 moves possible from a state)
+  - \( d \) = depth (steps until termination)
+- **Average**: Much smaller due to early stopping.
 
 ## Space Complexity
-- **O(jug1Cap × jug2Cap)** for visited states and BFS queue.
+- **O(1)** auxiliary space (stores only current state and immediate neighbors).
+
 ---
 
 ## Use Cases
-- Finding the shortest sequence of steps in the water jug problem.
-- AI search algorithm demonstration.
-- Teaching tool for BFS and state-space exploration.
+- Teaching local search algorithms in AI.
+- Comparing heuristic-based search techniques.
+- Understanding the effects of local optima and plateaus.
 
 ---
+
 ## Limitations
-- Requires both jug capacities and target to be integers.
-- Not optimized for very large capacities (can consume high memory).
-- BFS may still explore many unnecessary states if target is unreachable.
+- **Local Optima**: Can get stuck in non-goal states with no better neighbors.
+- **Plateaus**: May stop when all neighbors have equal heuristic values.
+- **No Backtracking**: Does not explore alternative paths once stuck.
+- **Not Guaranteed Optimal**: The solution found may not be the shortest path.
+
