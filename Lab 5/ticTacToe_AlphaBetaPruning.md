@@ -43,7 +43,6 @@ This project implements a **Tic-Tac-Toe AI** using the **Minimax algorithm with 
 
 ---
 ## Code
-👉 Paste your C++ code here:
 
 ```cpp
 #include <iostream>
