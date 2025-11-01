@@ -42,7 +42,6 @@ The goal is to simulate how a simple AI system can apply **expert reasoning rule
 - **Rule Structure**: Hard-coded logical conditions using `cond` and `and`.
 
 ---
----
 
 ## Code
 
