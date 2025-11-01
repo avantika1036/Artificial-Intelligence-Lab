@@ -159,6 +159,7 @@ The program uses **state-space search** with recursive planning to find a valid 
           (dolist (step solution)
             (format t "  ~A~%" step)))
         (format t "No solution found.~%"))))
+```
 --- 
 
 ## Time Complexity
