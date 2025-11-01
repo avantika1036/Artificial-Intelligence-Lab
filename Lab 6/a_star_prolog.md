@@ -51,7 +51,7 @@ The algorithm finds the **shortest path** between a start and goal node in a wei
 - **Search Direction:** Forward from Start to Goal.  
 
 ---
-## Example Query
+## Code
 ```prolog
 % ============================
 %  A* Search Implementation
